@@ -1,0 +1,2029 @@
+{ "categories": [
+  "都市計画", "施設・生活", "人口・交通", "地形・土地", "防災"
+  ],
+  "api_ids": {
+    "XIT001": {
+      "name": "不動産価格情報",
+      "params": {
+        "priceClassification": {
+          "type": "select",
+          "initial_value": "未指定：両方",
+          "options": ["", "01", "02"],
+          "trans_name": "価格情報区分コード",
+          "trans_values": ["未指定：両方", "01：不動産取引価格情報", "02：成約価格情報"],
+          "required": false,
+          "rule": "NN（数字2桁）01…不動産取引価格情報　02…成約価格情報"
+        },
+        "year": {
+          "type": "input",
+          "initial_value": 2025,
+          "trans_name": "取引時期（年）",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 4
+          },
+          "required": true,
+          "only_one_side": "individual_tab",
+          "rule": "YYYY（数字4桁）取引価格は2005年第3四半期～、成約価格は2021年～"
+        },
+        "quarter": {
+          "type": "select",
+          "initial_value": "未指定：通年",
+          "options": ["", 1, 2, 3, 4],
+          "trans_name": "取引時期（四半期）",
+          "trans_values": ["未指定：通年", "1：第1四半期", "2：第2四半期",  
+                        "3：第3四半期", "4：第4四半期"],
+          "required": false,
+          "only_one_side": "individual_tab",
+          "rule": "N（数字1桁）第1~4四半期で選択"
+        },
+        "area": {
+          "type": "multiple",
+          "initial_value": "08",
+          "trans_name": "都道府県コード",
+          "options": "Prefecture_code",
+          "trans_values": "Prefecture_code",
+          "multiple_columns": "Prefecture_code",
+          "selection_limit": "Prefecture_code",
+          "required": false,
+          "rule": "ボタンを押して選択（１つのみ）"
+        },
+        "city": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "市区町村コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        },
+        "station": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "駅コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 6
+          },
+          "required": false,
+          "rule": "NNNNNN（数字6桁）"
+        },
+        "language": {
+          "type": "select",
+          "initial_value": "日本語",
+          "options": ["ja", "en"],
+          "trans_name": "出力結果の言語",
+          "trans_values": ["日本語", "英語"],
+          "required": false,
+          "rule": "日本語か英語を選択"
+        }
+      },
+      "validation": {
+        "at_least_one": [
+          "area",
+          "city",
+          "station"
+        ],
+        "scope": {
+          "priceClassification": {
+            "": {
+              "year": [2005, "this_year"]
+            },
+            "01": {
+              "year": [2005, "this_year"]
+            },
+            "02": {
+              "year": [2021, "this_year"]
+            }
+          },
+          "year": {
+            "2005":{
+              "quarter": [3, 4]
+            }
+          }
+        }
+      },
+      "ext_options": {
+        "ext_names": ["CSV", "JSON"],
+        "ext_val": [".csv", ".json"]
+      },
+      "response_trans": {
+        "Type": "取引の種類",
+        "Region": "地域",
+        "MunicipalityCode": "市区町村コード",
+        "Prefecture": "都道府県名",
+        "Municipality": "市区町村名",
+        "DistrictName": "地区名",
+        "TradePrice": "取引価格",
+        "PricePerUnit": "坪単価",
+        "FloorPlan": "間取り",
+        "Area": "面積（m2）",
+        "UnitPrice": "取引価格（m2単価）",
+        "LandShape": "土地の形状",
+        "Frontage": "間口",
+        "TotalFloorArea": "延床面積（m2）",
+        "BuildingYear": "建築年",
+        "Structure": "建物の構造",
+        "Use": "用途",
+        "Purpose": "今後の利用目的",
+        "Direction": "前面道路：方位",
+        "Classification": "前面道路：種類",
+        "Breadth": "前面道路：幅員（m）",
+        "CityPlanning": "都市計画",
+        "CoverageRatio": "建蔽率（%）",
+        "FloorAreaRatio": "容積率（%）",
+        "Period": "取引時点",
+        "Renovation": "改装",
+        "Remarks": "取引の事情等",
+        "PriceCategory": "価格情報区分",
+        "DistrictCode": "地区コード"
+      }
+    },
+    "XIT002": {
+      "name": "都道府県内市区町村一覧",
+      "params": {
+        "area": {
+          "type": "multiple",
+          "initial_value": "08",
+          "trans_name": "都道府県コード",
+          "options": "Prefecture_code",
+          "trans_values": "Prefecture_code",
+          "multiple_columns": "Prefecture_code",
+          "selection_limit": "Prefecture_code",
+          "required": true,
+          "input_validation": {
+            "data_type": "int"
+          },
+          "rule": "ボタンを押して選択（１つのみ）"
+        },
+        "language": {
+          "type": "select",
+          "initial_value": "日本語",
+          "options": ["ja", "en"],
+          "trans_name": "出力結果の言語",
+          "trans_values": ["日本語", "英語"],
+          "required": false,
+          "rule": "日本語か英語を選択"
+        }
+      },
+      "response_trans": {
+        "id": "市区町村コード",
+        "name": "市区町村名"
+      },
+      "ext_options": {
+        "ext_names": ["CSV", "JSON"],
+        "ext_val": [".csv", ".json"]
+      }
+    },
+    "XCT001": {
+      "name": "鑑定評価書情報",
+      "params": {
+        "year": {
+          "type": "input",
+          "initial_value": 2025,
+          "trans_name": "価格時点",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 4,
+            "min": ["this_year", "-", "4"],
+            "max": "this_year"
+          },
+          "required": true,
+          "only_one_side": "individual_tab",
+          "rule": "YYYY（数字4桁）最新年から5年分のみ指定可能"
+        },
+        "area": {
+          "type": "multiple",
+          "initial_value": "08",
+          "trans_name": "都道府県コード",
+          "options": "Prefecture_code",
+          "trans_values": "Prefecture_code",
+          "multiple_columns": "Prefecture_code",
+          "selection_limit": "Prefecture_code",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "ボタンを押して選択（１つのみ）"
+        },
+        "division": {
+          "type": "select",
+          "initial_value": "00：住宅地",
+          "options": ["00", "03", "05", "07", "09", "10", "13", "20"],
+          "trans_name": "用途区分",
+          "trans_values": ["00：住宅地", "03：宅地見込地", "05：商業地",
+                           "07：準工業地", "09：工業地", "10：調整区域内宅地",
+                           "13：現況林地", "20：林地（都道府県地価調査）"],
+          "required": true,
+          "rule": "NN（数字2桁）"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["CSV", "JSON"],
+        "ext_val": [".csv", ".json"]
+      }
+    },
+    "XPT001": {
+      "name": "不動産価格情報のポイント（点）",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "from": {
+          "type": "input",
+          "initial_value": "20211",
+          "trans_name": "取引時期From",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": true,
+          "rule": "YYYYN（数字5桁）YYYY…西暦 N…四半期　取引価格は20053～、成約価格は20211～より指定可能"
+        },
+        "to": {
+          "type": "input",
+          "initial_value": "20211",
+          "trans_name": "取引時期To",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": true,
+          "rule": "YYYYN（数字5桁）YYYY…西暦 N…四半期　取引価格は20053～、成約価格は20211～より指定可能"
+        },
+        "priceClassification": {
+          "type": "select",
+          "initial_value": "未指定：両方",
+          "options": ["", "01", "02"],
+          "trans_name": "価格情報区分コード",
+          "trans_values": ["未指定：両方", "01：不動産取引価格情報", "02：成約価格情報"],
+          "required": false,
+          "rule": "NN（数字2桁）01…不動産取引価格情報　02…成約価格情報"
+        },
+        "landTypeCode": {
+          "type": "multiple",
+          "initial_value": "",
+          "options": ["01", "02", "07", "10", "11"],
+          "trans_name": "種類コード",
+          "trans_values": ["01：宅地（土地）", "02：宅地（土地と建物）",
+                        "07：中古マンション等", "10：農地", "11：林地"],
+          "multiple_columns": 1,
+          "required": false,
+          "rule": "ボタンを押して選択（複数選択可）"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XPT002": {
+      "name": "地価公示・地価調査のポイント（点）",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "year": {
+          "type": "input",
+          "initial_value": "1995",
+          "trans_name": "対象年",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 4,
+            "min": "1995",
+            "max": "this_year"
+          },
+          "required": true,
+          "rule": "NNNN（数字4桁）1995～最新年"
+        },
+        "priceClassification": {
+          "type": "select",
+          "initial_value": "未指定：両方",
+          "options": ["", "01", "02"],
+          "trans_name": "価格情報区分コード",
+          "trans_values": ["未指定：両方", "01：不動産取引価格情報", "02：成約価格情報"],
+          "required": false,
+          "rule": "NN（数字2桁）01…不動産取引価格情報　02…成約価格情報"
+        },
+        "useCategoryCode": {
+          "type": "multiple",
+          "initial_value": "",
+          "options": ["00", "03", "05", "07", "09", "10", "13", "20"],
+          "trans_name": "用途区分コード",
+          "trans_values": ["00：住宅地", "03：宅地見込地", "05：商業地", "07：準工業地", 
+                        "09：工業地", "10：調整区域内宅地", "13：現況林地", 
+                        "20：林地（都道府県地価調査）"],
+          "multiple_columns": 3,
+          "required": false,
+          "rule": "NN（数字2桁）"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT001": {
+      "name": "都市計画決定GISデータ（都市計画区域/区域区分）",
+      "category": "都市計画",
+      "display_name": "都市計画区域/区域区分",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT002": {
+      "name": "都市計画決定GISデータ（用途地域）",
+      "category": "都市計画",
+      "display_name": "用途地域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT003": {
+      "name": "都市計画決定GISデータ（立地適正化計画）",
+      "category": "都市計画",
+      "display_name": "立地適正化計画",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT004": {
+      "name": "国土数値情報（小学校区）",
+      "category": "施設・生活",
+      "display_name": "小学校区",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "行政区間コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT005": {
+      "name": "国土数値情報（中学校区）",
+      "category": "施設・生活",
+      "display_name": "中学校区",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "行政区間コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT006": {
+      "name": "国土数値情報（学校）",
+      "category": "施設・生活",
+      "display_name": "学校",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT007": {
+      "name": "国土数値情報（保育園・幼稚園等）",
+      "category": "施設・生活",
+      "display_name": "保育園・幼稚園等",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT010": {
+      "name": "国土数値情報（医療機関）",
+      "category": "施設・生活",
+      "display_name": "医療機関",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT011": {
+      "name": "国土数値情報（福祉施設）",
+      "category": "施設・生活",
+      "display_name": "福祉施設",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "行政区間コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        },
+        "welfareFacilityClassCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "福祉施設大分類コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 2
+          },
+          "required": false,
+          "rule": "NN（数字2桁）"
+        },
+        "welfareFacilityMiddleClassCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "福祉施設中分類コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 4
+          },
+          "required": false,
+          "rule": "NNNN（数字4桁）"
+        },
+        "welfareFacilityMinorClassCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "福祉施設小分類コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 6
+          },
+          "required": false,
+          "rule": "NNNNNN（数字6桁）"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+      "XKT013": {
+      "name": "国土数値情報（将来推計人口250mメッシュ）",
+      "category": "人口・交通",
+      "display_name": "将来推計人口",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT014": {
+      "name": "都市計画決定GISデータ（防火・準防火地域）",
+      "category": "都市計画",
+      "display_name": "防火・準防火地域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT015": {
+      "name": "国土数値情報（駅別乗降客数）",
+      "category": "人口・交通",
+      "display_name": "駅別乗降客数",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT016": {
+      "name": "国土数値情報（災害危険区域）",
+      "category": "防災",
+      "display_name": "災害危険区域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "行政区間コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+      "XKT017": {
+      "name": "国土数値情報（図書館）",
+      "category": "施設・生活",
+      "display_name": "図書館",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "行政区間コード",
+          "input_validation": {
+            "data_type": "int",
+            "digits": 5
+          },
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT018": {
+      "name": "国土数値情報（市町村役場及び集会施設等）",
+      "category": "施設・生活",
+      "display_name": "市町村役場・集会施設等",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT019": {
+      "name": "国土数値情報（自然公園地域）",
+      "category": "地形・土地",
+      "display_name": "自然公園地域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 9,
+          "options": [9, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "9（都道府県）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "prefectureCode": {
+          "type": "multiple",
+          "initial_value": "",
+          "trans_name": "都道府県コード",
+          "options": "Prefecture_code",
+          "trans_values": "Prefecture_code",
+          "multiple_columns": "Prefecture_code",
+          "required": false,
+          "rule": "ボタンを押して選択（複数選択可）"
+        },
+        "districtCode": {
+          "type": "multiple",
+          "initial_value": "",
+          "trans_name": "地区コード",
+          "options": ["00", "01", "02", "03", "04", "05", "06", "07", 
+                      "08", "09", "10", "11", "12", "13", "14"],
+          "trans_values": ["00:北海道以外", "01:石狩支庁", "02:渡島支庁",
+                            "03:檜山支庁", "04:後志支庁", "05:空知支庁",
+                            "06:上川支庁", "07:留萌支庁", "08:宗谷支庁",
+                            "09:網走支庁", "10:胆振支庁", "11:日高支庁",
+                            "12:十勝支庁", "13:釧路支庁", "14:根室支庁"],
+          "multiple_columns": 3,
+          "required": false,
+          "rule": "ボタンを押して選択（複数選択可）"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT020": {
+      "name": "国土数値情報（大規模盛土造成地マップ）",
+      "category": "地形・土地",
+      "display_name": "大規模盛土造成地",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT021": {
+      "name": "国土数値情報（地すべり防止区域）",
+      "category": "防災",
+      "display_name": "地すべり防止区域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "prefectureCode": {
+          "type": "multiple",
+          "initial_value": "",
+          "trans_name": "都道府県コード",
+          "options": "Prefecture_code",
+          "trans_values": "Prefecture_code",
+          "multiple_columns": "Prefecture_code",
+          "required": false,
+          "rule": "ボタンを押して選択（複数選択可）"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "地区コード",
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT022": {
+      "name": "国土数値情報（急傾斜地崩壊危険区域）",
+      "category": "防災",
+      "display_name": "急傾斜地崩壊危険区域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "prefectureCode": {
+          "type": "multiple",
+          "initial_value": "",
+          "trans_name": "都道府県コード",
+          "options": "Prefecture_code",
+          "trans_values": "Prefecture_code",
+          "multiple_columns": "Prefecture_code",
+          "required": false,
+          "rule": "ボタンを押して選択（複数選択可）"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "地区コード",
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT023": {
+      "name": "都市計画決定GISデータ（地区計画）",
+      "category": "都市計画",
+      "display_name": "地区計画",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT024": {
+      "name": "都市計画決定GISデータ（高度利用地区）",
+      "category": "都市計画",
+      "display_name": "高度利用地区",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT025": {
+      "name": "国道交通省都市局（地形区分に基づく液状化の発生傾向図）",
+      "category": "防災",
+      "display_name": "液状化の発生傾向図",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT026": {
+      "name": "国土数値情報（洪水浸水想定区域（想定最大規模））",
+      "category": "防災",
+      "display_name": "洪水浸水想定区域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 14,
+          "options": [14, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "14（丁目）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT027": {
+      "name": "国土数字情報（高潮浸水想定区域）",
+      "category": "防災",
+      "display_name": "高潮浸水想定区域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 13,
+          "options": [13, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "13（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT028": {
+      "name": "国土数値情報（津波浸水想定）",
+      "category": "防災",
+      "display_name": "津波浸水想定",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 14,
+          "options": [14, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "14（大字）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT029": {
+      "name": "国土数値情報（土砂災害警戒区域）",
+      "category": "防災",
+      "display_name": "土砂災害警戒区域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT030": {
+      "name": "都市計画決定GISデータ（都市計画道路）",
+      "category": "都市計画",
+      "display_name": "都市計画道路",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XKT031": {
+      "name": "国土数値情報（人口集中地区）",
+      "category": "人口・交通",
+      "display_name": "人口集中地区",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 9,
+          "options": [9, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "9（都道府県）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "administrativeAreaCode": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "行政区域コード",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": false,
+          "rule": "NNNNN（数字5桁）全国地方公共団体コードの上5桁"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XGT001": {
+      "name": "国土地理院GISデータ（指定緊急避難場所）",
+      "category": "防災",
+      "display_name": "指定緊急避難場所",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    },
+    "XST001": {
+      "name": "国土調査（災害履歴）",
+      "category": "防災",
+      "display_name": "災害履歴",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 9,
+          "options": [9, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "9（都道府県）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        },
+        "disastertype_code": {
+          "type": "multiple",
+          "initial_value": "",
+          "options": ["11", "12", "13", "14", "21", "22", "23", "24",
+                      "33", "34", "37", "38"],
+          "trans_name": "災害分類コード",
+          "trans_values": ["11:浸水域等", "12:堤防決壊箇所等", "13:高潮浸水域等",
+                           "14:高潮破堤箇所等", "21:がけ崩れ等", "22:地すべり等",
+                           "23;:河道閉塞箇所等", "24:土石流等", "33:液状化",
+                           "34:地震土砂災害", "37:津波高", "38:津波浸水域"],
+          "multiple_columns": 3,
+          "required": false,
+          "rule": "ボタンを押して選択（複数選択可）"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
+    }
+  },
+  "frequent": {
+    "Prefecture_code": {
+      "options": ["01", "02", "03", "04", "05", "06", "07", "08", "09",
+                 "10", "11", "12", "13", "14", "15", "16", "17", "18", 
+                 "19", "20", "21", "22", "23", "24", "25", "26", "27",
+                 "28", "29", "30", "31", "32", "33", "34", "35", "36", 
+                 "37", "38", "39", "40", "41", "42", "43", "44", "45", 
+                 "46", "47"],
+      "trans_values": [ "01:北海道", "02:青森", "03:岩手", "04:宮城",
+                        "05:秋田", "06:山形", "07:福島", "08:茨城", 
+                        "09:栃木", "10:群馬", "11:埼玉", "12:千葉",
+                        "13:東京", "14:神奈川", "15:新潟", "16:富山",
+                        "17:石川", "18:福井", "19:山梨", "20:長野",
+                        "21:岐阜", "22:静岡", "23:愛知", "24:三重",
+                        "25:滋賀", "26:京都", "27:大阪", "28:兵庫",
+                        "29:奈良", "30:和歌山", "31:鳥取", "32:島根",
+                        "33:岡山", "34:広島", "35:山口", "36:徳島",
+                        "37:香川", "38:愛媛", "39:高知", "40:福岡",
+                        "41:佐賀", "42:長崎", "43:熊本", "44:大分",
+                        "45:宮崎", "46:鹿児島", "47:沖縄"],
+      "multiple_columns": 5,
+      "selection_limit":1
+    }
+  }
+}

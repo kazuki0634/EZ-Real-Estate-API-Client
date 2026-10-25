@@ -1,0 +1,19 @@
+#単に配布する必要がないもの
+/list.txt
+/build/
+/dist/
+/src/build/
+/src/dist/
+
+# 仮想環境
+/venv
+
+# Pythonのキャッシュ
+__pycache__/
+
+# 拡張子
+*.py[cod]
+*.exe
+
+#開発用
+/data/settings.json
