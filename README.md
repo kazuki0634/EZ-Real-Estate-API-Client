@@ -29,8 +29,11 @@
 ![ダウンロード成功の画像](docs/md_images/image_5.png)
 
 ## ダウンロード方法
-このページの右にあるReleasesから最新の`EZ_RealEstate_API.zip`をダウンロードして展開してください。  
-展開後のフォルダ内にある`EZ_RealEstate_API.exe`をクリックすると起動できます。  
+このページのReleasesから最新の`EZ_RealEstate_API_Client.zip`をダウンロードして展開してください。 
+![PC向けのReleasesの場所](docs/md_images/image_6.png)
+
+## 起動方法
+展開後のフォルダ内にある`main.exe`をクリックすると起動できます。  
 （移動したいときは、同梱されている`data`フォルダを必ずexeファイルと同じフォルダに配置してください）
 
 ## 利用上の注意 
