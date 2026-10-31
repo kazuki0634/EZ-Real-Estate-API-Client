@@ -500,7 +500,7 @@ class Tab:
     save_button = ttk.Button(
       multiple_window,
       text="保存",
-      command=lambda: self.set_multiple_entry(multiple_window, check_vars, entry, required)
+      command=lambda: self.set_multiple_entry(multiple_window, base_frame, check_vars, entry, required)
     )
 
     if selection_limit == 10000:
@@ -510,7 +510,7 @@ class Tab:
       save_button.grid(row=row+1, column=multiple_columns//2, pady=10)
 
   #選択したものを入力欄に反映する
-  def set_multiple_entry(self, multiple_window, check_vars, entry, required):
+  def set_multiple_entry(self, multiple_window, base_frame, check_vars, entry, required):
 
     #デフォルトの値
     default_option = entry.get()
@@ -544,6 +544,9 @@ class Tab:
 
     #ウィンドウを閉じる
     multiple_window.destroy()
+
+    if isinstance(base_frame, tk.Toplevel):
+      base_frame.grab_set()
 
   #フォーマット形式を設定するパラメータがあった場合、プルダウンを固定する
   def fix_ext_option(self, event):
