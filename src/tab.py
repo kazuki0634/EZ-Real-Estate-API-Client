@@ -205,8 +205,8 @@ class Tab:
 
       button.bind(
         "<1>",
-        lambda event, p=param_info, e=entry, r=required:
-        self.open_multiple_window(event, p, e, r)
+        lambda event, b=base_frame, p=param_info, e=entry, r=required:
+        self.open_multiple_window(event, b, p, e, r)
       )
 
     #入力式の入力欄
@@ -328,7 +328,7 @@ class Tab:
     download_button.grid(row=3, column=3, padx=(30, 0), pady=(10, 0), sticky="nw")
 
   #複数選択用のウィンドウを開く
-  def open_multiple_window(self, event, param_info, entry, required):
+  def open_multiple_window(self, event, base_frame, param_info, entry, required):
     print(f"param_info = {param_info}")
 
     #ウィンドウを開くときのマウス位置の取得
@@ -342,6 +342,20 @@ class Tab:
 
     #このウィンドウを閉じるまでルートウィンドウを触れないようにする
     multiple_window.grab_set()
+
+    print(f"base_frameの型は{type(base_frame)}")
+
+    #bundle_tabのほうの詳細ウィンドウから呼び出されたとき限定の処理
+    if isinstance(base_frame, tk.Toplevel):
+      multiple_window.protocol(
+        "WM_DELETE_WINDOW",
+        lambda b=base_frame, m=multiple_window: keep_grab_set(b, m)
+      )
+
+      #複数選択用のウィンドウを閉じたあとに詳細ウィンドウのgrab_setを再び行う
+      def keep_grab_set(base_frame, multiple_window):
+        multiple_window.destroy()
+        base_frame.grab_set()
 
     #選択肢の値とその翻訳、表示される最大列数
     options = param_info["options"]
