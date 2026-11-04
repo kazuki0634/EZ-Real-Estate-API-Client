@@ -168,7 +168,7 @@ class IndividualTab(Tab):
 
     print(f"data = {data}")
     print(f"data_type = {type(data)}")
-
+    
     #レスポンスがエラーかどうかを判定する
     if super().is_response_error(data):
       return
@@ -180,7 +180,7 @@ class IndividualTab(Tab):
         data.rename(columns=response_trans, inplace=True) #inplace=Trueで元のdf自体を書き換え
     
     #名前を付けて保存
-    can_save = save_utils.save(data, ext_option, filename, save_dir)
+    can_save = save_utils.save(data, ext_option, filename, save_dir, self.tab_name)
     if not can_save:
       self.root.after(
         0,

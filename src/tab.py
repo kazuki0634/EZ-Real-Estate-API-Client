@@ -294,6 +294,26 @@ class Tab:
     self.file_name_entry.insert(0, "data")
     self.file_name_entry.grid(row=2, column=1, padx=(10, 0), pady=(10, 0), sticky="w")
 
+    #複数ダウンロード（地理空間情報）の場合はファイル名の末尾の設定を行う
+    if self.tab_name == "bundle_tab" and self.api_id == "XST001":
+
+      #ファイル名の末尾のラベル
+      suffix_label = ttk.Label(
+        self.save_frame,
+        text="ファイル名の末尾"
+      )
+      suffix_label.grid(row=0, column=2, padx=10, sticky="w")
+
+      #API_IDかAPI名かのプルダウン
+      self.suffix_combobox = ttk.Combobox(
+        self.save_frame,
+        values=["ID（例：XKT006）", "API名（例：学校）"],
+        width=16,
+        state="readonly"
+      )
+      self.suffix_combobox.current(0)
+      self.suffix_combobox.grid(row=2, column=2, padx=10, pady=(10, 0), sticky="w")
+
     #保存先のラベル
     save_label = ttk.Label(
       self.save_frame,
@@ -325,7 +345,7 @@ class Tab:
       text="ダウンロード",
       command=lambda: self.prepare_download()
     )
-    download_button.grid(row=3, column=3, padx=(30, 0), pady=(10, 0), sticky="nw")
+    download_button.grid(row=3, column=3, pady=(10, 0), sticky="nw")
 
   #複数選択用のウィンドウを開く
   def open_multiple_window(self, event, base_frame, param_info, entry, required):
