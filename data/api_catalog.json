@@ -2000,6 +2000,54 @@
         "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
         "ext_val": [".geojson", ".pbf"]
       }
+    },
+    "XNT001": {
+      "name": "内閣府重要土地等調査法（特別注視区域）API",
+      "category": "地形・土地",
+      "display_name": "特別注視区域",
+      "params": {
+        "response_format": {
+          "type": "select",
+          "initial_value": "GeoJSON",
+          "options": ["geojson", "pbf"],
+          "trans_name": "応答方式",
+          "trans_values": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+          "required": true,
+          "rule": "GeoJSON応答かpbf（バイナリベクトル応答）"
+        },
+        "z": {
+          "type": "select",
+          "initial_value": 11,
+          "options": [11, 15],
+          "trans_name": "z：ズームレベル（縮尺）",
+          "required": true,
+          "rule": "11（市）～15（詳細）XYZ方式における、ズームレベル（縮尺）"
+        },
+        "x": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のX値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のX値を指定"
+        },
+        "y": {
+          "type": "input",
+          "initial_value": "",
+          "trans_name": "タイル座標のY値",
+          "input_validation": {
+            "data_type": "int"
+          },
+          "required": true,
+          "rule": "XYZ方式における、タイル座標のY値を指定"
+        }
+      },
+      "ext_options": {
+        "ext_names": ["GeoJSON", "PBF（バイナリベクトルタイル）"],
+        "ext_val": [".geojson", ".pbf"]
+      }
     }
   },
   "frequent": {
