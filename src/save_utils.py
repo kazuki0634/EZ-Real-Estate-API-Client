@@ -2,13 +2,13 @@ import json
 from pathlib import Path
 
 #データ保存の本体処理
-def save(data, ext_option, filename, save_dir):
+def save(data, ext_option, filename, save_dir, tab_name, api_ids=None, suffix_option=None):
 
   #文字列をPathオブジェクトにする
   save_path = Path(save_dir)
 
-  #データの形式が辞書だった場合複数回繰り返す
-  if isinstance(data, dict):
+  #データが辞書型かつ複数ダウンロードの場合
+  if isinstance(data, dict) and tab_name == "bundle_tab":
     print(f"data = {data}")
 
     #まとめて保存するファイルのディレクトリのパスを作る
@@ -20,19 +20,24 @@ def save(data, ext_option, filename, save_dir):
       save_path.mkdir()
 
     #データごとに辞書のキーを名前の最初につけて保存する
-    for key, value in data.items():
+    for api_id, data_value in data.items():
 
-      tmp_filename = add_ext_option(f"{filename}_{key}", ext_option)
+      #ファイル名の末尾をAPI_IDにする場合
+      if suffix_option == "ID（例：XKT006）":
+        tmp_filename = add_ext_option(f"{filename}_{api_id}", ext_option)
 
-      save_file(value, ext_option, tmp_filename, save_path)
+      #ファイル名の末尾をAPI名にする場合
+      elif suffix_option == "API名（例：学校）":
+        suffix = api_ids[api_id]["display_name"]
+        tmp_filename = add_ext_option(f"{filename}_{suffix}", ext_option)
+        
+      save_file(data_value, ext_option, tmp_filename, save_path)
 
     return True
 
   #データの形式がそれ以外ならそのまま保存する
   else:
-    #拡張子の確認
     filename = add_ext_option(filename, ext_option)
-
     save_file(data, ext_option, filename, save_path)
     return True
 

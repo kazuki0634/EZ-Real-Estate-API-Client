@@ -524,7 +524,7 @@ class BundleTab(Tab):
 
     print(f"api_id = {api_id}")
 
-    for param_name, param_info in params.items():
+    for param_name in params.keys():
 
       if not param_name in geo_params:
         self.detail_params[api_id][param_name] = self.widgets[param_name].get()
@@ -821,7 +821,7 @@ class BundleTab(Tab):
         data.rename(columns=response_trans, inplace=True) #inplace=Trueで元のdf自体を書き換え
 
     #名前を付けて保存
-    can_save = save_utils.save(data, ext_option, filename, save_dir)
+    can_save = save_utils.save(data, ext_option, filename, save_dir, self.tab_name)
     if not can_save:
       self.root.after(
         0,
@@ -1016,8 +1016,11 @@ class BundleTab(Tab):
         response_trans = self.api_info["response_trans"]
         data.rename(columns=response_trans, inplace=True) #inplace=Trueで元のdf自体を書き換え
 
+    #ファイル名の末尾を取得
+    suffix_option = self.suffix_combobox.get()
+
     #名前を付けて保存
-    can_save = save_utils.save(data, ext_option, filename, save_dir)
+    can_save = save_utils.save(data, ext_option, filename, save_dir, self.tab_name, self.api_ids, suffix_option)
     if not can_save:
       self.root.after(
         0,
