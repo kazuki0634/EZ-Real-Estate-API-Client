@@ -396,7 +396,7 @@
     "XKT001": {
       "name": "都市計画決定GISデータ（都市計画区域/区域区分）",
       "category": "都市計画",
-      "display_name": "都市計画区域/区域区分",
+      "display_name": "都市計画区域・区域区分",
       "params": {
         "response_format": {
           "type": "select",
